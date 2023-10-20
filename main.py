@@ -5,12 +5,14 @@ from PPlay.sprite import *
 
 import time
 
-from menu import Menu
+from scp.menu import Menu
+from scp.game import Game
+from scp.rect import Rect as R
 
 # Constantes
 _height = 455
 _width = 802
-_FPS = 60
+_TargetFPS = 60
 _placarOffset = 50
 
 rd.seed(time.time())
@@ -47,7 +49,7 @@ class ScineManager:
     def game_to_normal(self):
         self.dificulty = 2
         print(f'{self.dificulty}')
-        self.call_halfScreen()
+        self.call_halfScreen() 
 
     def game_to_easy(self):
         self.dificulty = 1
@@ -82,10 +84,12 @@ optionsMenu.add_button(sm.game_to_dificult, buttonColor, "Dificio")
 optionsMenu.add_button(sm.game_to_normal, buttonColor, "Normal")
 optionsMenu.add_button(sm.game_to_easy, buttonColor, "Facio")
 
+game = Game(_width, _height, sm.dificulty)
+
 run = True
 while run:
     wind.set_background_color([0,12,24])
-    clock.tick(_FPS)
+    clock.tick(_TargetFPS)
 
 
     if sm.game_scene == 'mainMenu':
@@ -94,8 +98,7 @@ while run:
 
 
     elif sm.game_scene == 'game':
-        #print(f"on game dificult {sm.dificulty}")
-        pass
+        game.run()
 
 
     elif sm.game_scene == 'optionsMenu':
@@ -115,12 +118,12 @@ while run:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 if sm.game_scene == 'mainMenu':
-                    wind.quit()
+                    wind.close()
                 else:
                     sm.game_scene = 'mainMenu'
 
         if event.type == pygame.QUIT:
-            wind.quit()
+            wind.close()
             
 
 

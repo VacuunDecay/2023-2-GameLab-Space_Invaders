@@ -1,4 +1,4 @@
-from button import Button
+from scp.button import Button
 
 class Menu:
     def __init__(self, x, y, width, height, buttonH = None):
