@@ -8,6 +8,11 @@ from pygame import display
 from scp.rect import Rect
 from scp.timer import Timer
 
+'''
+um timer
+ou ser instanciado ele começa a contar em segundos
+'''
+
 class Tiro(Rect):
     
     def __init__(self, x, y, dif):

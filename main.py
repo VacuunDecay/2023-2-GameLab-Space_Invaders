@@ -12,6 +12,19 @@ ou
 from scp.nome_do_arquivo import nome_da_classe
 '''
 
+'''
+Mapa do codigo
+
+main
+-   menu
+--      botao
+---         rect
+-   game
+--      nave
+---         rect
+---     tiro
+---     timer
+'''
 
 # Constantes
 _height = 455
