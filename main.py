@@ -1,13 +1,17 @@
-import random as rd
-
+# Imports do PPlay
 from PPlay.window import *
 from PPlay.sprite import *
 
-import time
-
+# Imports internos
 from scp.menu import Menu
 from scp.game import Game
-from scp.rect import Rect as R
+'''
+Para acessar outros arquivos da pasta scp escreva
+from scp.nome_do_arquivo import *
+ou
+from scp.nome_do_arquivo import nome_da_classe
+'''
+
 
 # Constantes
 _height = 455
@@ -15,24 +19,31 @@ _width = 802
 _TargetFPS = 60
 _placarOffset = 50
 
-rd.seed(time.time())
-
+# Configuração da tela
 wind = Window(_width, _height)
 wind.set_title('Pong')
 
 clock = pygame.time.Clock()
 kb = wind.get_keyboard()
 
+# valores relativos ao tamanho da tela
+menuRect = (_width * 0.5, _height * 0.8) # altura e largura respectivamente
+menuCords = ((_width - menuRect[0]) * 0.5, (_height - menuRect[1]) * 0.5) # o ponto superior esquerdo
 
-menuRect = (_width * 0.5, _height * 0.8)
-menuCords = ((_width - menuRect[0]) * 0.5, (_height - menuRect[1]) * 0.5)
-
+# O ponto superior esquerdo e inferior direito respectivamente, da area onde
+# os menus seram confinados
 menuBox = (menuCords[0], menuCords[1], menuRect[0], menuRect[1])
 
+# Instanciando menus ( veja o arquivo menu.py para mais detalhes)
 startM = Menu(menuBox[0], menuBox[1], menuBox[2], menuBox[3], 30)
-
 optionsMenu = Menu(menuBox[0], menuBox[1], menuBox[2], menuBox[3], 30)
 
+# uma classe para mudar entre cenas
+# a variavel game_scene tem o nome da sena a ser executada no momento
+# essa classe só muda e guarda essa string com o nome da sena e a dificuldade
+# a execução da sena ta sendo feita no rum, usando uma serie de ifs
+# um pra cada nome de sena.
+# cuidado pra nao digitar os nome errado
 class ScineManager:
     def __init__(self):
         self.game_scene = 'mainMenu'
@@ -70,11 +81,17 @@ class ScineManager:
     def exit_game(self):
         pygame.quit()
         quit()
-
+# Uma instancia da classe assima
 sm = ScineManager()
 
+# A cor dos botoes, ta como variavel so pra ficar mais legivel
 buttonColor = (100, 100, 100)
 
+# Adicionando botoes os atributos sao respectivamente:
+# Uma função que o butao vai executar quando for apertado
+# A cor do botao
+# Um nome pro botao
+# Mas detalhes no arquivo menu.py
 startM.add_button(sm.start_game, buttonColor, "Start")
 startM.add_button(sm.call_options_menu, buttonColor, "Dificuldade")
 startM.add_button(None, buttonColor, "Rancking")
@@ -84,23 +101,29 @@ optionsMenu.add_button(sm.game_to_dificult, buttonColor, "Dificio")
 optionsMenu.add_button(sm.game_to_normal, buttonColor, "Normal")
 optionsMenu.add_button(sm.game_to_easy, buttonColor, "Facio")
 
+# Guarde as coisa do jogo em si aqui
+# Jogador, inimigos tiros etc
+# Edite o arquivo game.py para isso
 game = Game(_width, _height, sm.dificulty)
 
 run = True
 while run:
     wind.set_background_color([0,12,24])
-    clock.tick(_TargetFPS)
+    clock.tick(_TargetFPS) # define um fps maximo, isso deixa o jogo mais estavel
 
 
+    ########################################
+    # Ifs para trocar entre cenas
+    ## Menu principal
     if sm.game_scene == 'mainMenu':
         startM.draw()
         startM.update()
 
-
+    ## Jogo ( mais detalhes no arquivo game.py)
     elif sm.game_scene == 'game':
         game.run()
 
-
+    ## Menu de opsoes
     elif sm.game_scene == 'optionsMenu':
         optionsMenu.draw()
         optionsMenu.update()
@@ -112,7 +135,13 @@ while run:
 
 
 
-
+    # Imputs ( eu preferi usar o pygame ao inves do pplay por que nao tem um keydonw no pply)
+    '''
+    key press -> verdadeiro enquanto a tecla for pressionada
+    key down -> verdadeiro apenas na primeira vez em que se identifica que a tecla foi presionada
+    
+    '''
+    # Os inputs do jogador estao dentro de jogador
     for event in pygame.event.get():
         #KeyDown
         if event.type == pygame.KEYDOWN:

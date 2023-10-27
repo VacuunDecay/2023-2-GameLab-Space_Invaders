@@ -1,4 +1,3 @@
-from scp.tiro import Tiro
 from scp.nave import Nave
 
 class Game:
