@@ -1,7 +1,9 @@
+from PPlay.gameobject import GameObject
+
 from pygame import draw as pyDraw
 from pygame import display
 
-class Rect:
+class Rect(GameObject):
     def __init__(self, x, y, width, height, color = (100, 100, 100)):
         self.x = x
         self.y = y
@@ -15,13 +17,15 @@ class Rect:
         self.static_draw(self.x, self.y, self.width, self.height, self.color)
 
     @staticmethod
-    def static_draw(x, y, width, height, color):
+    def static_draw(x, y, width, height, color = (100, 100, 100)):
         sreen = display.get_surface()
         pyDraw.rect(sreen, color, (x, y, width, height))
 
     def set_color(self, r, g, b):
         self.color = (r, g, b)
-                    
+
+    
+
     def change_luminance(self, factor):
         oldColor = self.color
         

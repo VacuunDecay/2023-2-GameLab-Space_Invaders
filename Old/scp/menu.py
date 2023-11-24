@@ -1,4 +1,9 @@
-from button import Button
+from scp.button import Button
+
+"""
+O menu guarda botoes
+voce adiciona botoes com o metodo(função) add_bottao
+"""
 
 class Menu:
     def __init__(self, x, y, width, height, buttonH = None):

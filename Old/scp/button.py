@@ -1,12 +1,10 @@
 from PPlay.mouse import Mouse
-from rect import Rect
+from pygame.font import Font
 import pygame
 
-from datetime import datetime as time
-import datetime as dt
-
-from pygame.font import Font
 from enum import Enum
+
+from scp.rect import Rect
 
 class MouseButton(Enum):
     LEFT = 1, 
@@ -20,7 +18,7 @@ class Button(Rect):
         super().__init__(x, y, height, width, color)
 
         self.start_time = pygame.time.get_ticks()
-        self.action_delay = 200
+        self.action_delay = 300
 
         self.clickCont = 0
 
