@@ -95,5 +95,7 @@ class monster_mat(GameObject):
                     return True
         return False
 
+    def fire(self):
+        pass
 
 
