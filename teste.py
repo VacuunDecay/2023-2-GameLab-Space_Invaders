@@ -72,9 +72,9 @@ def jogo():
             nave.y += velo_nave_y * jogar.delta_time()
         if(tecla.key_pressed("UP") or tecla.key_pressed("w")):
             nave.y -= velo_nave_y * jogar.delta_time()'''
-        if(tecla.key_pressed("RIGHT") or tecla.key_pressed("d")):
+        if(tecla.key_pressed("RIGHT") or tecla.key_pressed("d")) and nave.x < jogar.width - nave.width:
             nave.x += velo_nave_x * jogar.delta_time()
-        if(tecla.key_pressed("LEFT") or tecla.key_pressed("a")):
+        if(tecla.key_pressed("LEFT") or tecla.key_pressed("a")) and nave.x > 0:
             nave.x -= velo_nave_x * jogar.delta_time()
         if(tecla.key_pressed("SPACE")) and cooldonw < cooldonwTimer.get_time():
             tiros.append(Sprite("img/Tiro.png"))
