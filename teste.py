@@ -3,7 +3,7 @@ import pygame
 from scp.timer import Timer
 from scp.monstros import *
 from scp.text import *
-
+from scp.player import *
 from PPlay.window import *
 from PPlay.sprite import *
 
@@ -49,8 +49,10 @@ def jogo():
     global points
     jogar = criar_janela("Space Invaders Game")
     tecla = Window.get_keyboard()
-    nave = Sprite("img/Spaceship.png")
-    tiro = Sprite("img/Tiro.png")
+    nave = Player(jogar)
+
+    tiro = Tiro(0, 0)
+    tiro.drawable = False
 
     tiros = []
 
@@ -64,6 +66,7 @@ def jogo():
     nave.set_position(jogar.width/2-nave.width/2, jogar.height - nave.height/2 - 50)
             
     clock = pygame.time.Clock()
+    
     while True:
         ##clock.tick(60)
         jogar.set_background_color([0, 0, 0])
@@ -99,14 +102,14 @@ def jogo():
             fps = 0
 
         jogar.set_title(str(fps))
-        tx.set_text(str(points))
-        tx.draw()
+        txPonts.set_text(str(points))
+        txPonts.draw()
         if mo.y + mo.height > nave.y:
             print("fim de jogo")
             jogar.close()
 
         mo.draw()
-        mo.update(jogar)
+        mo.update(jogar, nave)
         nave.draw()
         jogar.update()
         if(tecla.key_pressed("ESC")):
@@ -189,7 +192,7 @@ rank.set_position(x, y_rank)
 play.set_position(x, y_play)
 
 mo = monster_mat(1, 1)
-tx = Text("Hi")
+txPonts = Text("Hi")
 
 while True:
     janela.set_background_color([0, 0, 0])
@@ -220,5 +223,5 @@ while True:
         hover.draw()
         if msDown(mouse, msDonwSM, msDonwP):
             pass
-    tx.draw()
+    txPonts.draw()
     janela.update()
