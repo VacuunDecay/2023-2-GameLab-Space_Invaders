@@ -56,7 +56,7 @@ def jogo():
 
     tiros = []
 
-    cooldonw = 0.1
+    cooldonw = 0.05
     cooldonwTimer = Timer()
     cooldonwTimer.start()
 
@@ -68,13 +68,7 @@ def jogo():
     clock = pygame.time.Clock()
     
     while True:
-        ##clock.tick(60)
         jogar.set_background_color([0, 0, 0])
-        '''
-        if(tecla.key_pressed("DOWN") or tecla.key_pressed("s")):
-            nave.y += velo_nave_y * jogar.delta_time()
-        if(tecla.key_pressed("UP") or tecla.key_pressed("w")):
-            nave.y -= velo_nave_y * jogar.delta_time()'''
         if(tecla.key_pressed("RIGHT") or tecla.key_pressed("d")) and nave.x < jogar.width - nave.width:
             nave.x += velo_nave_x * jogar.delta_time()
         if(tecla.key_pressed("LEFT") or tecla.key_pressed("a")) and nave.x > 0:

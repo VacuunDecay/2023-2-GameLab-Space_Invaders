@@ -57,18 +57,23 @@ class monster_mat(GameObject):
 
 
     def chengeDirection(self, wind, delta):
-        if self.moveLeft: 
-            if self.x < 0:
-                self.y += self.spdY
-                self.moveLeft = False
-            else:
-                self.x -= self.spdX * delta
+        for l in range(self.L):
+            for c in range(self.C):
+                if self.mat[c][l].drawable:
+                    if self.mat[c][l].x < 0:
+                        if self.moveLeft:
+                            self.y += self.spdY
+                            self.moveLeft = False
+                    elif self.mat[c][l].x+self.mat[c][l].width > wind.width:
+                        if not self.moveLeft:
+                            self.y += self.spdY
+                            self.moveLeft = True
+
+
+        if self.moveLeft:
+            self.x -= self.spdX * delta
         else:
-            if self.x+self.width > wind.width :
-                self.y += self.spdY
-                self.moveLeft = True
-            else:
-                self.x += self.spdX * delta
+            self.x += self.spdX * delta
 
     def update(self, wind: Window, player: Player):
         delta = wind.delta_time()
@@ -109,6 +114,8 @@ class monster_mat(GameObject):
         hit.drawable = False
         hit.height = 0
         hit.width = 0
+
+
 
 
 
