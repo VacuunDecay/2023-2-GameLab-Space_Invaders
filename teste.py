@@ -7,14 +7,10 @@ from scp.player import *
 from PPlay.window import *
 from PPlay.sprite import *
 
-#Bernardo mendes
-
 #Game Variables
 points = 0
+dificuldade = 0
 
-# Otimizações 
-# - Começar a verificar de baixo pra cima
-# - Nao verificar pros tiros fora da caixa de colição da matrix de todos os monstros
 msDonwSM = [[0, 0, 0, 0], 
             [1, 2, 2, 2]]
 msDonwP = 0
@@ -44,51 +40,45 @@ def criar_janela(string):
     janela.set_title(string)
     return janela
 
+# Telas
+jogar = criar_janela("Space Invaders Game")
+mode_scm = criar_janela("img/Game mode")
+janela = criar_janela("Space Invaders")
+
+
+# Imput devices
+mouse = Window.get_mouse()
+key = Window.get_keyboard()
+
+# Objetos
+nave = Player(jogar)
+mo = monster_mat(1, 1)
+txPonts = Text()
+
+
 # é o jogo
 def jogo():
     global points
-    jogar = criar_janela("Space Invaders Game")
-    tecla = Window.get_keyboard()
-    nave = Player(jogar)
-
-    tiro = Tiro(0, 0)
-    tiro.drawable = False
-
-    tiros = []
-
-    cooldonw = 0.05
-    cooldonwTimer = Timer()
-    cooldonwTimer.start()
-
-    velo_nave_y = 300
-    velo_nave_x = 300
-    velo_tiro = 0
+    
     nave.set_position(jogar.width/2-nave.width/2, jogar.height - nave.height/2 - 50)
             
     clock = pygame.time.Clock()
     
     while True:
         jogar.set_background_color([0, 0, 0])
-        if(tecla.key_pressed("RIGHT") or tecla.key_pressed("d")) and nave.x < jogar.width - nave.width:
-            nave.x += velo_nave_x * jogar.delta_time()
-        if(tecla.key_pressed("LEFT") or tecla.key_pressed("a")) and nave.x > 0:
-            nave.x -= velo_nave_x * jogar.delta_time()
-        if(tecla.key_pressed("SPACE")) and cooldonw < cooldonwTimer.get_time():
-            tiros.append(Sprite("img/Tiro.png"))
-            tiros[-1].set_position(nave.x + nave.width/2 - tiro.width/2, nave.y + nave.height/2 - tiro.height/2)
-            velo_tiro= 1000
-            cooldonwTimer.restart()
 
-        for t in tiros:
-            t.y -= velo_tiro * jogar.delta_time()
+        nave.input()
+
+        for t in nave.tiros:
+            t.update(jogar, mo)
             t.draw()
             if t.y >= mo.y + mo.height: # se o tiro tiver abixo da matrix ele nao checa colizao
                 continue
             if mo.chekColision(t):
                 points += 1
-                tiros.remove(t)
+                nave.tiros.remove(t)
             elif t.y <= 0:
-                tiros.remove(t)
+                nave.tiros.remove(t)
 
         try:
             fps = 1/jogar.delta_time()
@@ -106,23 +96,23 @@ def jogo():
         mo.update(jogar, nave)
         nave.draw()
         jogar.update()
-        if(tecla.key_pressed("ESC")):
+        if(key.key_pressed("ESC")):
             jogar.close()
 
 # Menu seletor de dificuldade
 def modes():
-    jogar = criar_janela("img/Game mode")
+
     
     easy = Sprite("img/Easy.png")
     normal = Sprite("img/Normal.png")
     hard = Sprite("img/Hard.png")
     hover = Sprite("img/Hover.png")
-    mouse_mode = jogar.get_mouse()
+    mouse_mode = mode_scm.get_mouse()
     
-    x = jogar.width / 2 - easy.width / 2
-    y_easy = jogar.height/2  - 2*easy.height
-    y_normal = jogar.height/2
-    y_hard = jogar.height/2 + 2*easy.height
+    x = mode_scm.width / 2 - easy.width / 2
+    y_easy = mode_scm.height/2  - 2*easy.height
+    y_normal = mode_scm.height/2
+    y_hard = mode_scm.height/2 + 2*easy.height
     
     
     easy.set_position(x, y_easy)
@@ -130,7 +120,7 @@ def modes():
     hard.set_position(x, y_hard)
 
     while True:
-        jogar.set_background_color([0, 0, 0])
+        mode_scm.set_background_color([0, 0, 0])
         easy.draw()
         normal.draw()
         hard.draw()
@@ -154,68 +144,87 @@ def modes():
             hover.draw()
             if msDown(mouse_mode, msDonwSM, msDonwP):
                 dificuldade = 3
-                jogar.close()
+                mode_scm.close()
                 return dificuldade
-        jogar.update()
+        mode_scm.update()
         
 
 
 
-janela = criar_janela("Space Invaders")
-mouse = janela.get_mouse()
-dificuldade = 0
 
 
 
-play = Sprite("img/Play.png")
-mode = Sprite("img/Mode.png")
-rank = Sprite("img/Rank.png")
-quit = Sprite("img/Quit.png")
-hover = Sprite("img/Hover.png")
-
-x = janela.width / 2 - play.width / 2
-y_play = janela.height/2  - 3*play.height
-y_mode = janela.height/2 - 1.5*play.height
-y_rank = janela.height/2
-y_quit = janela.height/2 + 1.5*play.height
 
 
-quit.set_position(x, y_quit)
-mode.set_position(x, y_mode)
-rank.set_position(x, y_rank)
-play.set_position(x, y_play)
 
-mo = monster_mat(1, 1)
-txPonts = Text("Hi")
+class Menu1():
+    def __init__(self):
+        self.mouse = janela.get_mouse()
+
+        self.play = Sprite("img/Play.png")
+        self.mode = Sprite("img/Mode.png")
+        self.rank = Sprite("img/Rank.png")
+        self.quit = Sprite("img/Quit.png")
+        self.hover = Sprite("img/Hover.png")
+
+        self.x = janela.width / 2 - self.play.width / 2
+        self.y_play = janela.height/2  - 3*self.play.height
+        self.y_mode = janela.height/2 - 1.5*self.play.height
+        self.y_rank = janela.height/2
+        self.y_quit = janela.height/2 + 1.5*self.play.height
+
+
+        self.quit.set_position(self.x, self.y_quit)
+        self.mode.set_position(self.x, self.y_mode)
+        self.rank.set_position(self.x, self.y_rank)
+        self.play.set_position(self.x, self.y_play)
+    
+    def draw(self):
+        self.play.draw()
+        self.mode.draw()
+        self.rank.draw()
+        self.quit.draw()
+
+    def input(self):
+        if self.mouse.is_over_area([self.x, self.y_play], [self.x+self.play.width, self.y_play+self.play.height]):
+            self.hover.set_position(self.x, self.y_play)
+            self.hover.draw()
+            if msDown(self.mouse, msDonwSM, msDonwP):
+                janela.update()
+                jogo()
+        if self.mouse.is_over_area([self.x, self.y_mode], [self.x+self.mode.width, self.y_mode+self.mode.height]):
+            self.hover.set_position(self.x, self.y_mode)
+            self.hover.draw()
+            if msDown(self.mouse, msDonwSM, msDonwP):
+                dificuldade = modes()
+                janela.update()
+                jogo()
+        if self.mouse.is_over_area([self.x, self.y_quit], [self.x+self.quit.width, self.y_quit+self.quit.height]):
+            self.hover.set_position(self.x, self.y_quit)
+            self.hover.draw()
+            if msDown(self.mouse, msDonwSM, msDonwP):
+                janela.close()
+        if self.mouse.is_over_area([self.x, self.y_rank], [self.x+self.rank.width, self.y_rank+self.rank.height]):
+            self.hover.set_position(self.x, self.y_rank)
+            self.hover.draw()
+            if msDown(self.mouse, msDonwSM, msDonwP):
+                pass
+
+    def update(self):
+        pass
+
+menu1 = Menu1()
+
+curr_screen = menu1
 
 while True:
     janela.set_background_color([0, 0, 0])
-    play.draw()
-    mode.draw()
-    rank.draw()
-    quit.draw()
-    if mouse.is_over_area([x, y_play], [x+play.width, y_play+play.height]):
-        hover.set_position(x, y_play)
-        hover.draw()
-        if msDown(mouse, msDonwSM, msDonwP):
-            janela.update()
-            jogo()
-    if mouse.is_over_area([x, y_mode], [x+mode.width, y_mode+mode.height]):
-        hover.set_position(x, y_mode)
-        hover.draw()
-        if msDown(mouse, msDonwSM, msDonwP):
-            dificuldade = modes()
-            janela.update()
-            jogo()
-    if mouse.is_over_area([x, y_quit], [x+quit.width, y_quit+quit.height]):
-        hover.set_position(x, y_quit)
-        hover.draw()
-        if msDown(mouse, msDonwSM, msDonwP):
-            janela.close()
-    if mouse.is_over_area([x, y_rank], [x+rank.width, y_rank+rank.height]):
-        hover.set_position(x, y_rank)
-        hover.draw()
-        if msDown(mouse, msDonwSM, msDonwP):
-            pass
-    txPonts.draw()
+
+
+    curr_screen.draw()
+    curr_screen.input()
+    curr_screen.update()
+
+    
+
     janela.update()

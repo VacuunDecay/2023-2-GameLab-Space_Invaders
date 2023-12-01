@@ -2,7 +2,7 @@ from PPlay.gameobject import GameObject
 import pygame
 
 class Text(GameObject):
-    def __init__(self, text):
+    def __init__(self, text = ''):
         super().__init__()
 
         pygame.font.init() # you have to call this at the start,

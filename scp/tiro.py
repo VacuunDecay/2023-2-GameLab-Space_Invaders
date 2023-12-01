@@ -1,6 +1,5 @@
 from PPlay.sprite import Sprite
 
-from scp.player import Player
 
 class Tiro(Sprite):
     def __init__(self, x, y, isUp: bool = True):
@@ -11,7 +10,7 @@ class Tiro(Sprite):
         self.spd = 1
         self.isAlive = True
 
-    def update(self, screen, player: Player):
+    def update(self, screen, player):
         if self.isUp:
             self.y-= self.spd
             if self.y < 0:

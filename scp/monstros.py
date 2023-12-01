@@ -75,7 +75,7 @@ class monster_mat(GameObject):
         else:
             self.x += self.spdX * delta
 
-    def update(self, wind: Window, player: Player):
+    def update(self, wind: Window, player):
         delta = wind.delta_time()
 
         if self.tiroClock.get_time() > self.cdTiro:
@@ -116,8 +116,16 @@ class monster_mat(GameObject):
         hit.width = 0
 
 
+    def collided(self, tiro: Sprite):
+        for c in reversed(range(self.C)): # Começa pela linha mais a baixo e vai subindo
+            for l in range(self.L):
+                if self.mat[c][l].collided(tiro) and self.mat[c][l].drawable:
+                    self.remove(l, c)
+                    return True
+        return False
 
-
+    def hit(self):
+        pass
 
     def chekColision(self, tiro: Sprite):
         for c in reversed(range(self.C)): # Começa pela linha mais a baixo e vai subindo
