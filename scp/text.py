@@ -2,8 +2,10 @@ from PPlay.gameobject import GameObject
 import pygame
 
 class Text(GameObject):
-    def __init__(self, text = ''):
+    def __init__(self, text = ""):
         super().__init__()
+
+        text = str(text)
 
         pygame.font.init() # you have to call this at the start,
         #if you want to use this module.

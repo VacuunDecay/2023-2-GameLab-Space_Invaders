@@ -12,7 +12,7 @@ from scp.rect import *
 class monster_mat(GameObject):
     #Obs L = Colunas e C = Linhas
     #Fiz tudo trocado e agora ja é tarde de mais pra refatorar
-    def __init__(self, L, C):
+    def __init__(self, L, C, dificuldade = 1):
         super().__init__()
         if L < 6:
             L = 6
@@ -20,7 +20,14 @@ class monster_mat(GameObject):
         if C < 4:
             C = 4
         self.C = C
-            
+
+
+        if dificuldade <= 0:
+            dificuldade = 1    
+        self.dif = dificuldade
+
+        self.deadCont = 0
+
         self.L = L
         self.mat = [[None]*L for _ in range(C)]
 
@@ -34,17 +41,17 @@ class monster_mat(GameObject):
         self.moveLeft = False
         self.screen = pygame.display.get_surface()
 
-        self.spdX = 100
-        self.spdY = 10
+        self.spdX = 100*self.dif
+        self.spdY = 10 *self.dif
 
-
+        self.allDead = False
 
         self.width = L*self.offsetX+self.x - (self.offsetX/3)
         self.height = C*self.offsetY+self.y - (self.offsetY/3)
 
         self.tiros = []
         self.tiroClock = Timer()
-        self.cdTiro = 1 # segundo? 
+        self.cdTiro = 1/self.dif
 
         self.tiroClock.start()
 
@@ -98,7 +105,7 @@ class monster_mat(GameObject):
             if t.isAlive:
                 t.draw()
 
-        Rect(self.x, self.y, self.width, self.height).draw()
+        # Rect(self.x, self.y, self.width, self.height).draw()
 
         for l in range(self.L):
             for c in range(self.C):
@@ -114,6 +121,9 @@ class monster_mat(GameObject):
         hit.drawable = False
         hit.height = 0
         hit.width = 0
+        self.deadCont += 1
+        if self.deadCont >= self.C * self.L:
+            self.allDead = True
 
 
     def collided(self, tiro: Sprite):

@@ -10,6 +10,8 @@ class Player(Sprite):
         self.screen = screen
         self.key = screen.get_keyboard()
 
+        self.points = 0
+
         self.initPos = (self.screen.width/2-self.width/2, self.screen.height - self.height/2 - 50)
 
         self.lives = dif*2
@@ -30,6 +32,9 @@ class Player(Sprite):
         self.cooldonw.set_max_time(0.5)
 
         self.respawn()
+
+    def addPoint(self, dif):
+        self.points += dif
 
     def respawn(self):
         self.x = self.initPos[0]
