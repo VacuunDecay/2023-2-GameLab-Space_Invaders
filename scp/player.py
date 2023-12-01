@@ -14,7 +14,7 @@ class Player(Sprite):
 
         self.initPos = (self.screen.width/2-self.width/2, self.screen.height - self.height/2 - 50)
 
-        self.lives = dif*2
+        self.lives = round(6/dif)
         self.hitable = True
 
         self.tiros = []
@@ -29,16 +29,24 @@ class Player(Sprite):
 
         self.cooldonw = Timer()
         self.cooldonw.start()
-        self.cooldonw.set_max_time(0.5)
+        self.cooldonw.set_max_time(0.2*dif)
 
         self.respawn()
 
+    def set_dif(self, dif):
+        self.lives = round(6/dif)
+        self.cooldonw.set_max_time(0.2*dif)
+
     def addPoint(self, dif):
-        self.points += dif
+        self.points += round(dif*1000)
 
     def respawn(self):
         self.x = self.initPos[0]
         self.y = self.initPos[1]
+
+    def restart(self):
+        self.respawn()
+        self.points = 0
 
     def update(self):
         pass

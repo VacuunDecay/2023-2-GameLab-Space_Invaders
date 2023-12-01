@@ -21,7 +21,6 @@ class monster_mat(GameObject):
             C = 4
         self.C = C
 
-
         if dificuldade <= 0:
             dificuldade = 1    
         self.dif = dificuldade
@@ -75,7 +74,8 @@ class monster_mat(GameObject):
                         if not self.moveLeft:
                             self.y += self.spdY
                             self.moveLeft = True
-
+        if delta > 1:
+            delta = 1
 
         if self.moveLeft:
             self.x -= self.spdX * delta
@@ -101,6 +101,7 @@ class monster_mat(GameObject):
 
 
     def draw(self):
+        #print(f'{self.x}, {self.y}')
         for t in self.tiros:
             if t.isAlive:
                 t.draw()
@@ -126,14 +127,14 @@ class monster_mat(GameObject):
             self.allDead = True
 
 
-    def collided(self, tiro: Sprite):
+    '''def collided(self, tiro: Sprite):
         for c in reversed(range(self.C)): # Começa pela linha mais a baixo e vai subindo
             for l in range(self.L):
                 if self.mat[c][l].collided(tiro) and self.mat[c][l].drawable:
                     self.remove(l, c)
                     return True
         return False
-
+    '''
     def hit(self):
         pass
 
@@ -154,7 +155,7 @@ class monster_mat(GameObject):
             shooter = self.mat[rd.randint(0, self.C-1)][rd.randint(0, self.L-1)]
             cont+= 1
 
-        tiro = Tiro(shooter.x+(self.moster.width/2), shooter.y-(self.moster.height/2), False)
+        tiro = Tiro(shooter.x+(self.moster.width/2), shooter.y+(self.moster.height/2), False)
 
         if cont < 24:
             self.tiros.append(tiro)
